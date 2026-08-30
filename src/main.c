@@ -68,7 +68,7 @@ void initMenu(struct User *u)
         switch (option)
         {
         case 1:
-            loginMenu(u->name, u->password);
+            loginMenu(u->name, u->password); // pointer : follow the arrow and enter to name/password field
             if (strcmp(u->password, getPassword(*u)) == 0)
             {
                 printf("\n\nPassword Match!");
@@ -81,9 +81,7 @@ void initMenu(struct User *u)
             r = 1;
             break;
         case 2:
-            // student TODO : add your **Registration** function
-            // here
-            r = 1;
+            registerMenu(u->name, u->password);
             break;
         case 3:
             exit(1);
@@ -101,4 +99,6 @@ int main()
     initMenu(&u);
     mainMenu(u);
     return 0;
+    // order is important here, there is no simultaneous execution
+    // first initMeni task is compelted, then mainMenu task starts
 }

@@ -1,10 +1,13 @@
 #include "header.h"
 
-const char *RECORDS = "./data/records.txt";
+const char *RECORDS = "./data/records.txt"; // route to records address
 
-int getAccountFromFile(FILE *ptr, char name[50], struct Record *r)
+int getAccountFromFile(FILE *ptr, char name[50], struct Record *r) // ptr for pointer to an open file (gets a previously opened file)
+// structifies all data in a struct record
+// opens, gets a file, reads all fields of an account in a struct record
 {
     return fscanf(ptr, "%d %d %s %d %d/%d/%d %s %d %lf %s",
+        // file to program info reading
                   &r->id,
 		  &r->userId,
 		  name,
@@ -21,9 +24,10 @@ int getAccountFromFile(FILE *ptr, char name[50], struct Record *r)
 void saveAccountToFile(FILE *ptr, struct User u, struct Record r)
 {
     fprintf(ptr, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n",
-            &r->id,
-	    &u->id
-	    &u->name,
+        // program to file info writing
+            r.id,
+	    u.id,
+	    u.name,
             r.accountNbr,
             r.deposit.month,
             r.deposit.day,
@@ -96,12 +100,19 @@ invalid:
     }
 }
 
+/*
+cosas a mejorar:
+- r.id no tiene valor asignado
+- accountType no se valida
+- phone como int es discutible
+- usa goto
+*/
 void createNewAcc(struct User u)
 {
-    struct Record r;
-    struct Record cr;
+    struct Record r; // new account creation
+    struct Record cr; // new temporary record to compare with existing accounts
     char userName[50];
-    FILE *pf = fopen(RECORDS, "a+");
+    FILE *pf = fopen(RECORDS, "a+"); // opens records.txt and asks each field info that will be saved in records.txt (allows to read and write)
 
 noAccount:
     system("clear");
@@ -117,9 +128,10 @@ noAccount:
         if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr)
         {
             printf("✖ This Account already exists for this user\n\n");
-            goto noAccount;
+            goto noAccount; // go back to start and redo all the verification
         }
     }
+    // only after checking the full file it asks for info to create a new account
     printf("\nEnter the country:");
     scanf("%s", r.country);
     printf("\nEnter the phone number:");
@@ -129,10 +141,10 @@ noAccount:
     printf("\nChoose the type of account:\n\t-> saving\n\t-> current\n\t-> fixed01(for 1 year)\n\t-> fixed02(for 2 years)\n\t-> fixed03(for 3 years)\n\n\tEnter your choice:");
     scanf("%s", r.accountType);
 
-    saveAccountToFile(pf, u, r);
+    saveAccountToFile(pf, u, r); // this line orders to write info prevousily staged in r 
 
     fclose(pf);
-    success(u);
+    success(u); // shows the success message and goes back to main menu or exit
 }
 
 void checkAllAccounts(struct User u)
@@ -140,13 +152,15 @@ void checkAllAccounts(struct User u)
     char userName[100];
     struct Record r;
 
-    FILE *pf = fopen(RECORDS, "r");
+    FILE *pf = fopen(RECORDS, "r"); // only reading mode
 
-    system("clear");
-    printf("\t\t====== All accounts from user, %s =====\n\n", u.name);
-    while (getAccountFromFile(pf, userName, &r))
+    system("clear"); // same command as if it was typed in termina, just clears terminal space
+    printf("\t\t====== All accounts from user, %s =====\n\n", u.name); // shows current user name
+    
+    while (getAccountFromFile(pf, userName, &r)) // while the function can read another record in records.txt, continue the loop
+    // in each loop, r is filled with a different account
     {
-        if (strcmp(userName, u.name) == 0)
+        if (strcmp(userName, u.name) == 0) // if the account belongs to u, print data, else continue with next record
         {
             printf("_____________________\n");
             printf("\nAccount number:%d\nDeposit Date:%d/%d/%d \ncountry:%s \nPhone number:%d \nAmount deposited: $%.2f \nType Of Account:%s\n",

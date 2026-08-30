@@ -56,14 +56,17 @@ void initMenu(struct User *u)
 {
     int r = 0;
     int option;
-    system("clear");
-    printf("\n\n\t\t======= ATM =======\n");
-    printf("\n\t\t-->> Feel free to login / register :\n");
-    printf("\n\t\t[1]- login\n");
-    printf("\n\t\t[2]- register\n");
-    printf("\n\t\t[3]- exit\n");
+  
     while (!r)
     {
+
+        system("clear");
+        printf("\n\n\t\t======= ATM =======\n");
+        printf("\n\t\t-->> Feel free to login / register :\n");
+        printf("\n\t\t[1]- login\n");
+        printf("\n\t\t[2]- register\n");
+        printf("\n\t\t[3]- exit\n");
+
         scanf("%d", &option);
         switch (option)
         {

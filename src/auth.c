@@ -31,6 +31,52 @@ void loginMenu(char a[50], char pass[50]) {
   }
 };
 
+void registerMenu(char name[50], char password[50]) {
+  struct User userChecker;
+  int lastId = -1;
+  int usernameAvailable = 0; // false, unavailable or not valid
+
+  FILE *fp = fopen("./data/users.txt", "a+");
+
+  if (fp == NULL) {
+    printf("Error! opening file");
+    exit(1);
+  }
+
+  system("clear");
+  printf("\t\t\t===== Register =====\n");
+
+  while (!usernameAvailable) {
+    printf("\nChoose your username: ");
+    scanf("%s", name);
+
+    rewind(fp);
+    lastId = -1;
+    usernameAvailable = 1; // true, available
+
+    while (fscanf(fp, "%d %s %s", &userChecker.id, userChecker.name,
+                  userChecker.password) == 3) {
+      lastId = userChecker.id;
+
+      if (strcmp(userChecker.name, name) == 0) {
+        printf("username not available\n");
+        usernameAvailable = 0;
+        break;
+      }
+    }
+  }
+
+  printf("\nCreate your password: ");
+  scanf("%s", password);
+
+  int newId = lastId + 1;
+
+  fprintf(fp, "%d %s %s\n", newId, name, password);
+  fclose(fp);
+
+  printf("\t\t\t===== Registration completed =====\n");
+};
+
 const char *getPassword(struct User u)
 /*
 recieve user

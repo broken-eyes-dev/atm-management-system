@@ -96,7 +96,7 @@ if yes, return password
     exit(1);
   }
 
-  while (fscanf(fp, "%s %s", userChecker.name, userChecker.password) != EOF) {
+  while (fscanf(fp, "%d %s %s", &userChecker.id, userChecker.name, userChecker.password) == 3) {
     if (strcmp(userChecker.name, u.name) ==
         0) // compares both user and userChecker, if ==0 then perfect match
     {

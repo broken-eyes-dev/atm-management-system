@@ -231,3 +231,83 @@ void checkAllAccounts(struct User u) {
   fclose(pf);
   success(u);
 }
+
+
+void checkAccountDetails(struct User u)
+{
+  struct Record r;
+  char userName[100];
+
+  int accountNbr;
+  int found = 0;
+
+  FILE *file = fopen(RECORDS, "r"); // no need to write or edit in this func
+
+  if (file == NULL) 
+  {
+    printf("Error! opening file");
+    exit(1);
+  }
+
+  system("clear");
+
+  printf("Enter the account number to see details: ");
+  scanf("%d", &accountNbr);
+  
+while (getAccountFromFile(file, userName, &r))
+ {
+  if(strcmp(userName, u.name) == 0 && r.accountNbr == accountNbr)
+  {
+    found = 1;
+    double interestRate = 0.0;
+
+    printf("_____________________\n");
+    printf("\nAccount number: %d\n"
+       "Deposit Date: %d/%d/%d\n"
+       "Country: %s\n"
+       "Phone number: %d\n"
+       "Amount deposited: $%.2f\n"
+       "Type Of Account: %s\n",
+       r.accountNbr,
+       r.deposit.day,
+       r.deposit.month,
+       r.deposit.year,
+       r.country,
+       r.phone,
+       r.amount,
+       r.accountType);
+
+       if (strcmp(r.accountType, "current") == 0) {
+        printf("You will not get interests because the account is of type current\n");
+       }
+       else if (strcmp(r.accountType, "saving") == 0) {
+        interestRate = 0.07;
+       }
+       else if (strcmp(r.accountType, "fixed01") == 0) {
+        interestRate = 0.04;
+       }
+       else if (strcmp(r.accountType, "fixed02") == 0) {
+        interestRate = 0.05;
+       }
+       else if (strcmp(r.accountType, "fixed03") == 0) {
+        interestRate = 0.08;
+       }
+       else {
+        printf("Unknown account type\n");
+       }
+
+       if (interestRate > 0)
+       {
+        double interest = r.amount * interestRate / 12;
+        printf("You will get $%.2f as interest on day %d of every month\n", interest, r.deposit.day);
+       }
+  }
+}
+fclose(file);
+if (found == 0)
+{
+  printf("Account not found\n");
+  return;
+}
+success(u);
+}

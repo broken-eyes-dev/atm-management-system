@@ -38,10 +38,7 @@ void registerMenu(char name[50], char password[50]) {
 
   FILE *fp = fopen("./data/users.txt", "a+");
 
-  if (fp == NULL) {
-    printf("Error! opening file");
-    exit(1);
-  }
+ 
 
   system("clear");
   printf("\t\t\t===== Register =====\n");

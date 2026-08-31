@@ -1,3 +1,4 @@
 *.o
 atm
 sketch.c
+*.txt

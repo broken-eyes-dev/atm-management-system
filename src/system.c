@@ -199,7 +199,7 @@ void updateAccount(struct User u) {
   remove("./data/records.txt");
   rename("./data/temp.txt", "./data/records.txt");
 
-  printf("Account updated successfully\n");
+  success(u);
 }
 
 void checkAllAccounts(struct User u) {

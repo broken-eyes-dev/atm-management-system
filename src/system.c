@@ -433,3 +433,55 @@ void makeTransaction(struct User u) {
 
   success(u);  
 }
+
+void removeExistingAccount (struct User u) {
+  struct Record r; 
+  char userName[100];
+
+  int accountNbr;
+  int found = 0;
+
+  system("clear");
+  printf("\t\t\t===== Remove existing account =====\n");
+
+  printf("\nEnter the account number to remove: ");
+  scanf("%d", &accountNbr);
+
+  FILE *oldFile = fopen(RECORDS, "r"); // reading only records.txt
+
+  if (oldFile == NULL) {
+    printf("Error opening records file\n");
+    exit(1);
+  }
+
+  FILE *tempFile = fopen("./data/temp.txt", "w"); // edit version, new file with modified info
+
+  if (tempFile == NULL) {
+    printf("Error creating temporary file\n");
+    fclose(oldFile);
+    exit(1);
+  }
+
+  while(getAccountFromFile(oldFile, userName, &r)) {
+    if (strcmp(userName, u.name) == 0 && r.accountNbr == accountNbr) {
+      found = 1;
+      continue;
+    }
+    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n", r.id, r.userId,
+            userName, r.accountNbr, r.deposit.month, r.deposit.day,
+            r.deposit.year, r.country, r.phone, r.amount, r.accountType);    
+  }
+  fclose(oldFile);
+  fclose(tempFile);
+
+  if (found == 0) {
+    remove("./data/temp.txt");
+    printf("Account not found\n");
+    return;
+  }
+  remove("./data/records.txt");
+  rename("./data/temp.txt", "./data/records.txt");
+printf("\nYour account was successfully removed\n");
+
+success(u);
+}

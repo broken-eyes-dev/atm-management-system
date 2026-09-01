@@ -4,5 +4,3 @@
 
 2 1 Michel 123 10/10/2020 UK 1234123 12345.30 saving
 
-3 2 quesito 10 8/31/2026 France 751589953 5500.26 current
-

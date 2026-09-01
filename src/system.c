@@ -15,12 +15,14 @@ int getAccountFromFile(FILE *ptr, char name[50],
                 &r->amount, r->accountType) != EOF;
 }
 
+
 void saveAccountToFile(FILE *ptr, struct User u, struct Record r) {
   fprintf(ptr, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n",
           // program to file info writing
           r.id, u.id, u.name, r.accountNbr, r.deposit.month, r.deposit.day,
           r.deposit.year, r.country, r.phone, r.amount, r.accountType);
 }
+
 
 void stayOrReturn(int notGood, void f(struct User u), struct User u) {
   int option;
@@ -53,6 +55,7 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
   }
 }
 
+
 void success(struct User u) {
   int option;
   printf("\n✔ Success!\n\n");
@@ -69,6 +72,7 @@ invalid:
     goto invalid;
   }
 }
+
 
 /*
 cosas a mejorar:
@@ -118,6 +122,7 @@ noAccount:
   fclose(pf);
   success(u); // shows the success message and goes back to main menu or exit
 }
+
 
 void updateAccount(struct User u) {
   struct Record r; // current reading account on each loop
@@ -201,6 +206,7 @@ void updateAccount(struct User u) {
 
   success(u);
 }
+
 
 void checkAllAccounts(struct User u) {
   char userName[100];
@@ -310,4 +316,120 @@ if (found == 0)
   return;
 }
 success(u);
+}
+
+
+void makeTransaction(struct User u) {
+  struct Record r;
+  char userName[100];
+
+  int accountNbr;
+  int option;
+  int found = 0;
+  double transactionAmount;
+  int transactionDone = 0;
+
+
+  system("clear");
+  printf("\t\t\t===== Make transaction =====\n");
+
+  printf("\nEnter the account number to make a transaction: ");
+  scanf("%d", &accountNbr);
+
+  FILE *oldFile = fopen(RECORDS, "r"); // reading only records.txt
+
+  if (oldFile == NULL) {
+    printf("Error opening records file\n");
+    exit(1);
+  }
+
+  FILE *tempFile = fopen("./data/temp.txt", "w"); // edit version, new file with modified info
+
+  if (tempFile == NULL) {
+    printf("Error creating temporary file\n");
+    fclose(oldFile);
+    exit(1);
+  }  
+
+  while (getAccountFromFile(oldFile, userName, &r)) {
+    if (strcmp(userName, u.name) == 0 && r.accountNbr == accountNbr) {
+      found = 1;
+      int transactionAllowed = 1;
+
+      if (strcmp(r.accountType, "fixed01") == 0 ||
+          strcmp(r.accountType, "fixed02") == 0 ||
+          strcmp(r.accountType, "fixed03") == 0)
+          {
+            transactionAllowed = 0;
+            printf("Transactions are not allowed for fixed accounts\n");
+          }
+
+      if (transactionAllowed) {
+        printf("What transaction do you want to make?\n");
+        printf("1. Deposit\n");
+        printf("2. Withdraw\n");
+        // possibility to add money transfer in the future
+
+        scanf("%d", &option);
+
+        switch (option) {
+          case 1:
+            printf("Enter the amount to deposit: ");
+            scanf("%lf", &transactionAmount);
+            if (transactionAmount <= 0) {
+              printf("invalid amount\n");
+              break;
+            }
+            r.amount = r.amount + transactionAmount;
+            transactionDone = 1;
+            printf("Your new balance is €%.2lf", r.amount);
+            break;
+
+          case 2:
+            printf("Enter the amount to withdraw: ");
+            scanf("%lf", &transactionAmount);
+            if (transactionAmount <= 0) {
+              printf("Invalid amount\n");
+              break;
+            }
+
+            if (transactionAmount > r.amount) {
+              printf("Not enough funds\n");
+              printf("Your balance is €%.2lf", r.amount);
+            } else {
+              r.amount = r.amount - transactionAmount;
+              transactionDone = 1;
+              printf("Transaction successfully made\n");
+              printf("Your new balance is €%.2lf", r.amount);
+            }
+            break;
+
+          default:
+            printf("Invalid option\n");
+            break;
+        }
+      }
+    }
+    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n", r.id, r.userId,
+            userName, r.accountNbr, r.deposit.month, r.deposit.day,
+            r.deposit.year, r.country, r.phone, r.amount, r.accountType);
+  }
+  fclose(oldFile);
+  fclose(tempFile);
+
+  if (found == 0) {
+    remove("./data/temp.txt");
+    printf("Account not found\n");
+    return;
+  }
+
+  if (transactionDone == 0) {
+    remove("./data/temp.txt");
+    printf("\nTransaction was not completed\n");
+    return;
+  }
+  remove("./data/records.txt");
+  rename("./data/temp.txt", "./data/records.txt");
+
+  success(u);  
 }

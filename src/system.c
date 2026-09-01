@@ -485,3 +485,98 @@ printf("\nYour account was successfully removed\n");
 
 success(u);
 }
+
+void transferOwner(struct User u) {
+  struct Record r; 
+  char userName[100];
+  char newOwnerName[100];
+
+  int accountNbr;
+  int userFound = 0;
+  int accountFound = 0;
+
+  system("clear");
+  printf("\t\t\t===== Transfer an account =====\n");
+
+
+  printf("\nEnter the new owner's name: ");
+  scanf("%s", newOwnerName); // destinatario
+
+  // NEW OWNER'S USERNAME VALIDATION
+  FILE *usersFile = fopen("./data/users.txt", "r");
+  if (usersFile == NULL) {
+    printf("Error opening users file\n");
+    exit(1);
+  }
+struct User userChecker;
+int newOwnerId = -1;
+
+while (fscanf(usersFile, "%d %s %s",
+              &userChecker.id,
+              userChecker.name,
+              userChecker.password) == 3)
+{
+    if (strcmp(userChecker.name, newOwnerName) == 0)
+    {
+        userFound = 1;
+        newOwnerId = userChecker.id;
+        break;
+    }
+}
+fclose(usersFile);
+
+if(userFound == 0) {
+  printf("Unable to find the username\n");
+  return;
+}
+
+if (strcmp(newOwnerName, u.name) == 0)
+{
+    printf("You already own this account\n");
+    return;
+}
+
+  printf("\nEnter the account number to transfer: ");
+  scanf("%d", &accountNbr);
+  
+  // ACCOUNT'S SEARCH AND TRANSFER
+  FILE *oldFile = fopen(RECORDS, "r"); // reading only records.txt
+
+  if (oldFile == NULL) {
+    printf("Error opening records file\n");
+    exit(1);
+  }
+
+  FILE *tempFile = fopen("./data/temp.txt", "w"); // edit version, new file with modified info
+
+  if (tempFile == NULL) {
+    printf("Error creating temporary file\n");
+    fclose(oldFile);
+    exit(1);
+  } 
+
+  while (getAccountFromFile(oldFile, userName, &r)) {
+    if (strcmp(userName, u.name) == 0 &&
+    r.accountNbr == accountNbr) {
+      accountFound = 1;
+      r.userId = newOwnerId;
+      strcpy(userName, newOwnerName);
+    }
+    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n", r.id, r.userId,
+            userName, r.accountNbr, r.deposit.month, r.deposit.day,
+            r.deposit.year, r.country, r.phone, r.amount, r.accountType);     
+  }
+  fclose(oldFile);
+  fclose(tempFile);
+
+    if (accountFound == 0) {
+    remove("./data/temp.txt");
+    printf("Account not found\n");
+    return;
+  }
+  remove("./data/records.txt");
+  rename("./data/temp.txt", "./data/records.txt");
+  printf("\nYour account was successfully transferred to %s\n", newOwnerName);
+
+success(u);
+}

@@ -37,8 +37,7 @@ void mainMenu(struct User u)
         removeExistingAccount(u);
         break;
     case 7:
-        // student TODO : add your **Transfer owner** function
-        // here
+        transferOwner(u);
         break;
     case 8:
         exit(1);

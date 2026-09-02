@@ -8,10 +8,10 @@ int getAccountFromFile(FILE *ptr, char name[50],
 // structifies all data in a struct record
 // opens, gets a file, reads all fields of an account in a struct record
 {
-  return fscanf(ptr, "%d %d %s %d %d/%d/%d %s %d %lf %s",
+  return fscanf(ptr, "%d %d %s %d %d/%d/%d %s %s %lf %s",
                 // file to program info reading
                 &r->id, &r->userId, name, &r->accountNbr, &r->deposit.month,
-                &r->deposit.day, &r->deposit.year, r->country, &r->phone,
+                &r->deposit.day, &r->deposit.year, r->country, r->phone,
                 &r->amount, r->accountType) != EOF;
 }
 
@@ -27,8 +27,22 @@ int isValidAccountType(char accountType[]) {
 return 0;
 }
 
+int isValidPhone(char phone[]) {
+    if (strlen(phone) != 10) {
+        return 0;
+    }
+
+    for (int i = 0; phone[i] != '\0'; i++) {
+        if (phone[i] < '0' || phone[i] > '9') {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 void saveAccountToFile(FILE *ptr, struct User u, struct Record r) {
-  fprintf(ptr, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n",
+  fprintf(ptr, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n",
           // program to file info writing
           r.id, u.id, u.name, r.accountNbr, r.deposit.month, r.deposit.day,
           r.deposit.year, r.country, r.phone, r.amount, r.accountType);
@@ -102,6 +116,7 @@ void createNewAcc(struct User u) {
   char userName[50];
   int lastId = -1;
   int validType = 0;
+  int validPhone = 0;
 
   FILE *pf = fopen(RECORDS, "a+"); // opens records.txt and asks each field info that will be
                       // saved in records.txt (allows to read and write)
@@ -132,8 +147,16 @@ noAccount:
   // only after checking the full file it asks for info to create a new account
   printf("\nEnter the country:");
   scanf("%s", r.country);
-  printf("\nEnter the phone number:");
-  scanf("%d", &r.phone);
+  while(!validPhone) {
+    printf("\nEnter the phone number:");
+    scanf("%s", r.phone);
+
+    if (isValidPhone(r.phone)) {
+      validPhone = 1;
+    } else {
+      printf("Invalid phone number. Please enter exactly 10 digits.\n");
+    }
+  }
   printf("\nEnter amount to deposit: $");
   scanf("%lf", &r.amount);
   
@@ -164,6 +187,7 @@ void updateAccount(struct User u) {
   int accountNbr; // user input
   int option;     // choose between phone or country
   int found = 0;  // finding flag
+  int validPhone = 0;
 
   system("clear");
   printf("\t\t\t===== Update account =====\n");
@@ -211,8 +235,16 @@ void updateAccount(struct User u) {
           break;
 
         case 2:
+        while(!validPhone) {
           printf("Enter new phone number: ");
-          scanf("%d", &r.phone);
+          scanf("%s", r.phone);
+        
+          if (isValidPhone(r.phone)) {
+            validPhone = 1;
+          } else {
+            printf("Invalid phone number. Please enter exactly 10 digits.\n");
+          }
+        }
           validOption = 1;
           break;
 
@@ -222,7 +254,7 @@ void updateAccount(struct User u) {
         }
       }
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n", r.id, r.userId,
+    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
             userName, r.accountNbr, r.deposit.month, r.deposit.day,
             r.deposit.year, r.country, r.phone, r.amount, r.accountType);
   }
@@ -272,7 +304,7 @@ while (getAccountFromFile(file, userName, &r))
     printf("\nAccount number: %d\n"
        "Deposit Date: %d/%d/%d\n"
        "Country: %s\n"
-       "Phone number: %d\n"
+       "Phone number: %s\n"
        "Amount deposited: $%.2f\n"
        "Type Of Account: %s\n",
        r.accountNbr,
@@ -343,7 +375,7 @@ void checkAllAccounts(struct User u) {
       found = 1;
       printf("_____________________\n");
       printf("\nAccount number:%d\nDeposit Date:%d/%d/%d \ncountry:%s \nPhone "
-             "number:%d \nAmount deposited: $%.2f \nType Of Account:%s\n",
+             "number:%s \nAmount deposited: $%.2f \nType Of Account:%s\n",
              r.accountNbr, r.deposit.day, r.deposit.month, r.deposit.year,
              r.country, r.phone, r.amount, r.accountType);
     }
@@ -449,7 +481,7 @@ void makeTransaction(struct User u) {
         }
       }
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n", r.id, r.userId,
+    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
             userName, r.accountNbr, r.deposit.month, r.deposit.day,
             r.deposit.year, r.country, r.phone, r.amount, r.accountType);
   }
@@ -508,7 +540,7 @@ void removeExistingAccount (struct User u) {
       found = 1;
       continue;
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n", r.id, r.userId,
+    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
             userName, r.accountNbr, r.deposit.month, r.deposit.day,
             r.deposit.year, r.country, r.phone, r.amount, r.accountType);    
   }
@@ -606,7 +638,7 @@ if (strcmp(newOwnerName, u.name) == 0)
       r.userId = newOwnerId;
       strcpy(userName, newOwnerName);
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n", r.id, r.userId,
+    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
             userName, r.accountNbr, r.deposit.month, r.deposit.day,
             r.deposit.year, r.country, r.phone, r.amount, r.accountType);     
   }

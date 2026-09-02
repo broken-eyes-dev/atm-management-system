@@ -67,7 +67,7 @@ void initMenu(struct User *u)
         {
         case 1:
             loginMenu(u->name, u->password); // pointer : follow the arrow and enter to name/password field
-            if (checkCredentials(*u))
+            if (checkCredentials(u))
             {
                 printf("\nLogin successful!\n");
             }
@@ -88,7 +88,7 @@ void initMenu(struct User *u)
             printf("Insert a valid operation!\n");
         }
     }
-};
+}
 
 int main()
 {

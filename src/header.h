@@ -32,7 +32,7 @@ struct User
 // authentication functions
 void loginMenu(char a[50], char pass[50]);
 void registerMenu(char a[50], char pass[50]);
-int checkCredentials(struct User u);
+int checkCredentials(struct User *u);
 
 // system function
 void createNewAcc(struct User u);

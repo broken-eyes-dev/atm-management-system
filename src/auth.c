@@ -74,7 +74,7 @@ void registerMenu(char name[50], char password[50]) {
   printf("\t\t\t===== Registration completed =====\n");
 };
 
-int checkCredentials(struct User u)
+int checkCredentials(struct User *u)
 /*
 recieve user credentials
 open users.txt
@@ -95,9 +95,10 @@ return 0 otherwise
   }
 
   while (fscanf(fp, "%d %s %s", &userChecker.id, userChecker.name, userChecker.password) == 3) {
-    if (strcmp(userChecker.name, u.name) ==
-        0 && strcmp(userChecker.password, u.password) == 0)
+    if (strcmp(userChecker.name, u->name) ==
+        0 && strcmp(userChecker.password, u->password) == 0)
     {
+      u->id = userChecker.id;
       fclose(fp);
       return 1;
     }

@@ -85,8 +85,10 @@ void createNewAcc(struct User u) {
   struct Record r;  // new account creation
   struct Record cr; // new temporary record to compare with existing accounts
   char userName[50];
-  FILE *pf = fopen(
-      RECORDS, "a+"); // opens records.txt and asks each field info that will be
+  int lastId = -1;
+
+
+  FILE *pf = fopen(RECORDS, "a+"); // opens records.txt and asks each field info that will be
                       // saved in records.txt (allows to read and write)
 
 noAccount:
@@ -98,12 +100,18 @@ noAccount:
   printf("\nEnter the account number:");
   scanf("%d", &r.accountNbr);
 
+  lastId = -1;
+  rewind(pf);
+
   while (getAccountFromFile(pf, userName, &cr)) {
+    lastId = cr.id;
+
     if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
       printf("✖ This Account already exists for this user\n\n");
       goto noAccount; // go back to start and redo all the verification
     }
   }
+  r.id = lastId + 1;
   // only after checking the full file it asks for info to create a new account
   printf("\nEnter the country:");
   scanf("%s", r.country);
@@ -207,7 +215,6 @@ void updateAccount(struct User u) {
   success(u);
 }
 
-
 void checkAllAccounts(struct User u) {
   char userName[100];
   struct Record r;
@@ -237,7 +244,6 @@ void checkAllAccounts(struct User u) {
   fclose(pf);
   success(u);
 }
-
 
 void checkAccountDetails(struct User u)
 {
@@ -317,7 +323,6 @@ if (found == 0)
 }
 success(u);
 }
-
 
 void makeTransaction(struct User u) {
   struct Record r;

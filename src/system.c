@@ -15,6 +15,17 @@ int getAccountFromFile(FILE *ptr, char name[50],
                 &r->amount, r->accountType) != EOF;
 }
 
+int isValidAccountType(char accountType[]) {
+  if (strcmp(accountType, "saving") == 0 ||
+    strcmp(accountType, "current") == 0 ||
+    strcmp(accountType, "fixed01") == 0 ||
+    strcmp(accountType, "fixed02") == 0 ||
+    strcmp(accountType, "fixed03") == 0)
+{
+    return 1;
+}
+return 0;
+}
 
 void saveAccountToFile(FILE *ptr, struct User u, struct Record r) {
   fprintf(ptr, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n",
@@ -22,7 +33,6 @@ void saveAccountToFile(FILE *ptr, struct User u, struct Record r) {
           r.id, u.id, u.name, r.accountNbr, r.deposit.month, r.deposit.day,
           r.deposit.year, r.country, r.phone, r.amount, r.accountType);
 }
-
 
 void stayOrReturn(int notGood, void f(struct User u), struct User u) {
   int option;
@@ -91,7 +101,7 @@ void createNewAcc(struct User u) {
   struct Record cr; // new temporary record to compare with existing accounts
   char userName[50];
   int lastId = -1;
-
+  int validType = 0;
 
   FILE *pf = fopen(RECORDS, "a+"); // opens records.txt and asks each field info that will be
                       // saved in records.txt (allows to read and write)
@@ -113,6 +123,7 @@ noAccount:
 
     if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
       printf("✖ This Account already exists for this user\n\n");
+      waitForEnter();
       goto noAccount; // go back to start and redo all the verification
       // refactor goto in future version
     }
@@ -125,10 +136,19 @@ noAccount:
   scanf("%d", &r.phone);
   printf("\nEnter amount to deposit: $");
   scanf("%lf", &r.amount);
-  printf("\nChoose the type of account:\n\t-> saving\n\t-> current\n\t-> "
+  
+   while (!validType){
+    printf("\nChoose the type of account:\n\t-> saving\n\t-> current\n\t-> "
          "fixed01(for 1 year)\n\t-> fixed02(for 2 years)\n\t-> fixed03(for 3 "
          "years)\n\n\tEnter your choice:");
-  scanf("%s", r.accountType);
+    scanf("%s", r.accountType);
+
+    if(isValidAccountType(r.accountType)) {
+      validType = 1;
+    } else {
+      printf("Invalid account type. Please try again.\n");
+    }
+  } 
 
   saveAccountToFile(pf, u, r); // this line orders to write info prevousily staged in r
 

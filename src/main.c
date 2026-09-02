@@ -67,13 +67,13 @@ void initMenu(struct User *u)
         {
         case 1:
             loginMenu(u->name, u->password); // pointer : follow the arrow and enter to name/password field
-            if (strcmp(u->password, getPassword(*u)) == 0)
+            if (checkCredentials(*u))
             {
-                printf("\n\nPassword Match!");
+                printf("\nLogin successful!\n");
             }
             else
             {
-                printf("\nWrong password!! or User Name\n");
+                printf("\nInvalid username or password\n");
                 exit(1);
             }
             r = 1;

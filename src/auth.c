@@ -74,20 +74,21 @@ void registerMenu(char name[50], char password[50]) {
   printf("\t\t\t===== Registration completed =====\n");
 };
 
-const char *getPassword(struct User u)
+int checkCredentials(struct User u)
 /*
-recieve user
+recieve user credentials
 open users.txt
 read each user
-search for matching names
-if yes, return password
+compare username and password
+return 1 if credentials match
+return 0 otherwise
 */
 {
-  FILE *fp; // refers to an open file
+  FILE *fp;
   struct User userChecker;
 
   if ((fp = fopen("./data/users.txt", "r")) ==
-      NULL) // opens the actual file and gives the path thean read
+      NULL)
   {
     printf("Error! opening file");
     exit(1);
@@ -95,16 +96,13 @@ if yes, return password
 
   while (fscanf(fp, "%d %s %s", &userChecker.id, userChecker.name, userChecker.password) == 3) {
     if (strcmp(userChecker.name, u.name) ==
-        0) // compares both user and userChecker, if ==0 then perfect match
+        0 && strcmp(userChecker.password, u.password) == 0)
     {
-      fclose(fp);                        // if match, closes file
-      char *buff = userChecker.password; // returns found password for user
-      return buff;
-      // it returns internally the matching password in order to compare with
-      // user input
+      fclose(fp);
+      return 1;
     }
   }
 
   fclose(fp);
-  return "no user found";
+  return 0;
 }

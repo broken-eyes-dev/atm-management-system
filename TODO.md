@@ -14,7 +14,7 @@
 - [x] Assign valid record IDs when creating accounts
 - [x] Keep the main menu running after an operation returns
 - [x] Prevent error messages from being cleared immediately when returning to the main menu
-- [ ] Validate account type input
+- [x] Validate account type input
 - [ ] Review phone number storage because leading zeros are lost
 - [ ] Review normal program exits using `exit(1)`
 - [ ] Improve file reading validation (`fscanf` conversion count)

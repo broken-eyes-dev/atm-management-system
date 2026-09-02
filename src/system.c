@@ -12,7 +12,7 @@ int getAccountFromFile(FILE *ptr, char name[50],
                 // file to program info reading
                 &r->id, &r->userId, name, &r->accountNbr, &r->deposit.month,
                 &r->deposit.day, &r->deposit.year, r->country, r->phone,
-                &r->amount, r->accountType) != EOF;
+                &r->amount, r->accountType) == 11;
 }
 
 int isValidAccountType(char accountType[]) {

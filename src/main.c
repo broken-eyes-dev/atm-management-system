@@ -3,13 +3,17 @@
 void mainMenu(struct User u)
 {
     int option;
+    int running = 1; // =1 means menu continues to be executed
+
+    while(running){
+
     system("clear");
     printf("\n\n\t\t======= ATM =======\n\n");
     printf("\n\t\t-->> Feel free to choose one of the options below <<--\n");
     printf("\n\t\t[1]- Create a new account\n");
     printf("\n\t\t[2]- Update account information\n");
-    printf("\n\t\t[3]- Check accounts\n");
-    printf("\n\t\t[4]- Check list of owned account\n");
+    printf("\n\t\t[3]- Check account details\n");
+    printf("\n\t\t[4]- Check list of owned accounts\n");
     printf("\n\t\t[5]- Make Transaction\n");
     printf("\n\t\t[6]- Remove existing account\n");
     printf("\n\t\t[7]- Transfer ownership\n");
@@ -40,12 +44,13 @@ void mainMenu(struct User u)
         transferOwner(u);
         break;
     case 8:
-        exit(1);
+        running = 0;
         break;
     default:
         printf("Invalid operation!\n");
     }
-};
+}
+}
 
 void initMenu(struct User *u)
 {

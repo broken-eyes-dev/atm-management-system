@@ -109,6 +109,7 @@ noAccount:
     if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
       printf("✖ This Account already exists for this user\n\n");
       goto noAccount; // go back to start and redo all the verification
+      // refactor goto in future version
     }
   }
   r.id = lastId + 1;
@@ -124,8 +125,7 @@ noAccount:
          "years)\n\n\tEnter your choice:");
   scanf("%s", r.accountType);
 
-  saveAccountToFile(pf, u,
-                    r); // this line orders to write info prevousily staged in r
+  saveAccountToFile(pf, u, r); // this line orders to write info prevousily staged in r
 
   fclose(pf);
   success(u); // shows the success message and goes back to main menu or exit
@@ -215,38 +215,7 @@ void updateAccount(struct User u) {
   success(u);
 }
 
-void checkAllAccounts(struct User u) {
-  char userName[100];
-  struct Record r;
-
-  FILE *pf = fopen(RECORDS, "r"); // only reading mode
-
-  system("clear"); // same command as if it was typed in termina, just clears
-                   // terminal space
-  printf("\t\t====== All accounts from user, %s =====\n\n",
-         u.name); // shows current user name
-
-  while (getAccountFromFile(pf, userName,
-                            &r)) // while the function can read another record
-                                 // in records.txt, continue the loop
-  // in each loop, r is filled with a different account
-  {
-    if (strcmp(userName, u.name) == 0) // if the account belongs to u, print
-                                       // data, else continue with next record
-    {
-      printf("_____________________\n");
-      printf("\nAccount number:%d\nDeposit Date:%d/%d/%d \ncountry:%s \nPhone "
-             "number:%d \nAmount deposited: $%.2f \nType Of Account:%s\n",
-             r.accountNbr, r.deposit.day, r.deposit.month, r.deposit.year,
-             r.country, r.phone, r.amount, r.accountType);
-    }
-  }
-  fclose(pf);
-  success(u);
-}
-
-void checkAccountDetails(struct User u)
-{
+void checkAccountDetails(struct User u) {
   struct Record r;
   char userName[100];
 
@@ -322,6 +291,36 @@ if (found == 0)
   return;
 }
 success(u);
+}
+
+void checkAllAccounts(struct User u) {
+  char userName[100];
+  struct Record r;
+
+  FILE *pf = fopen(RECORDS, "r"); // only reading mode
+
+  system("clear"); // same command as if it was typed in termina, just clears
+                   // terminal space
+  printf("\t\t====== All accounts from user, %s =====\n\n",
+         u.name); // shows current user name
+
+  while (getAccountFromFile(pf, userName,
+                            &r)) // while the function can read another record
+                                 // in records.txt, continue the loop
+  // in each loop, r is filled with a different account
+  {
+    if (strcmp(userName, u.name) == 0) // if the account belongs to u, print
+                                       // data, else continue with next record
+    {
+      printf("_____________________\n");
+      printf("\nAccount number:%d\nDeposit Date:%d/%d/%d \ncountry:%s \nPhone "
+             "number:%d \nAmount deposited: $%.2f \nType Of Account:%s\n",
+             r.accountNbr, r.deposit.day, r.deposit.month, r.deposit.year,
+             r.country, r.phone, r.amount, r.accountType);
+    }
+  }
+  fclose(pf);
+  success(u);
 }
 
 void makeTransaction(struct User u) {

@@ -55,6 +55,11 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
   }
 }
 
+void waitForEnter(void) {
+  printf("Press enter to continue");
+  getchar();
+  getchar();
+}
 
 void success(struct User u) {
   int option;
@@ -207,6 +212,7 @@ void updateAccount(struct User u) {
   if (found == 0) {
     remove("./data/temp.txt");
     printf("Account not found\n");
+    waitForEnter();
     return;
   }
   remove("./data/records.txt");
@@ -288,6 +294,7 @@ fclose(file);
 if (found == 0)
 {
   printf("Account not found\n");
+  waitForEnter();
   return;
 }
 success(u);
@@ -296,6 +303,7 @@ success(u);
 void checkAllAccounts(struct User u) {
   char userName[100];
   struct Record r;
+  int found = 0;
 
   FILE *pf = fopen(RECORDS, "r"); // only reading mode
 
@@ -312,6 +320,7 @@ void checkAllAccounts(struct User u) {
     if (strcmp(userName, u.name) == 0) // if the account belongs to u, print
                                        // data, else continue with next record
     {
+      found = 1;
       printf("_____________________\n");
       printf("\nAccount number:%d\nDeposit Date:%d/%d/%d \ncountry:%s \nPhone "
              "number:%d \nAmount deposited: $%.2f \nType Of Account:%s\n",
@@ -320,6 +329,12 @@ void checkAllAccounts(struct User u) {
     }
   }
   fclose(pf);
+  if (found == 0)
+{
+  printf("No accounts found\n");
+  waitForEnter();
+  return;
+}
   success(u);
 }
 
@@ -424,18 +439,20 @@ void makeTransaction(struct User u) {
   if (found == 0) {
     remove("./data/temp.txt");
     printf("Account not found\n");
+    waitForEnter();
     return;
   }
 
   if (transactionDone == 0) {
     remove("./data/temp.txt");
     printf("\nTransaction was not completed\n");
+    waitForEnter();
     return;
   }
   remove("./data/records.txt");
   rename("./data/temp.txt", "./data/records.txt");
 
-  success(u);  
+  success(u); 
 }
 
 void removeExistingAccount (struct User u) {
@@ -481,6 +498,7 @@ void removeExistingAccount (struct User u) {
   if (found == 0) {
     remove("./data/temp.txt");
     printf("Account not found\n");
+    waitForEnter();
     return;
   }
   remove("./data/records.txt");
@@ -531,12 +549,14 @@ fclose(usersFile);
 
 if(userFound == 0) {
   printf("Unable to find the username\n");
+  waitForEnter();
   return;
 }
 
 if (strcmp(newOwnerName, u.name) == 0)
 {
     printf("You already own this account\n");
+    waitForEnter();
     return;
 }
 
@@ -576,6 +596,7 @@ if (strcmp(newOwnerName, u.name) == 0)
     if (accountFound == 0) {
     remove("./data/temp.txt");
     printf("Account not found\n");
+    waitForEnter();
     return;
   }
   remove("./data/records.txt");

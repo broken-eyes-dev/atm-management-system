@@ -79,7 +79,8 @@ void initMenu(struct User *u)
             else
             {
                 printf("\nInvalid username or password\n");
-                exit(1);
+                waitForEnter();
+                break;
             }
             r = 1;
             break;
@@ -87,8 +88,7 @@ void initMenu(struct User *u)
             registerMenu(u->name, u->password);
             break;
         case 3:
-            exit(1);
-            break;
+            exit(EXIT_SUCCESS);
         default:
             printf("Insert a valid operation!\n");
         }

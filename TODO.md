@@ -16,7 +16,7 @@
 - [x] Prevent error messages from being cleared immediately when returning to the main menu
 - [x] Validate account type input
 - [x] Review phone number storage because leading zeros are lost
-- [ ] Review normal program exits using `exit(1)`
+- [x] Review normal program exits using `exit(1)`
 - [x] Improve file reading validation (`fscanf` conversion count, ==11 instead of !=EOF)
 
 

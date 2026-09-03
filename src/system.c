@@ -61,7 +61,7 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
     else if (option == 1)
       mainMenu(u);
     else if (option == 2)
-      exit(0);
+      exit(EXIT_SUCCESS);
     else {
       printf("Insert a valid operation!\n");
       goto invalid;
@@ -75,7 +75,7 @@ void stayOrReturn(int notGood, void f(struct User u), struct User u) {
     mainMenu(u);
   } else {
     system("clear");
-    exit(1);
+    exit(EXIT_SUCCESS);
   }
 }
 
@@ -95,7 +95,7 @@ invalid:
   if (option == 1) {
     mainMenu(u);
   } else if (option == 0) {
-    exit(1);
+    exit(EXIT_SUCCESS);
   } else {
     printf("Insert a valid operation!\n");
     goto invalid;

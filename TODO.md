@@ -3,7 +3,7 @@
 ## Versions
 
 - [x] v1.0.0 - MVP with all required features
-- [ ] v1.0.1 - Bug fixes and stability improvements
+- [x] v1.0.1 - Bug fixes and stability improvements
 - [ ] v1.1.0 - Refactor and code quality improvements
 
 

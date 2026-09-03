@@ -28,6 +28,12 @@
 - [ ] Clean up the Makefile
 
 
+## Robustness / Error handling
+
+- [ ] Check return values of `remove()` and `rename()` when replacing `records.txt`
+- [ ] Review file operation failures to avoid leaving inconsistent temporary files
+
+
 ## Later / Polish
 
 - [ ] Review inconsistent navigation and success/error flow

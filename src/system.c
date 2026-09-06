@@ -40,7 +40,24 @@ int isValidPhone(char phone[]) {
 
     return 1;
 }
+// for all data modifications such as update info, transaction, transfer, remove
+void writeRecordToFile(FILE *file, const char userName[], struct Record r){
+  fprintf(file,
+            "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n",
+            r.id,
+            r.userId,
+            userName,
+            r.accountNbr,
+            r.deposit.month,
+            r.deposit.day,
+            r.deposit.year,
+            r.country,
+            r.phone,
+            r.amount,
+            r.accountType);
+}
 
+// for saving data from scratch, new accounts.
 void saveAccountToFile(FILE *ptr, struct User u, struct Record r) {
   fprintf(ptr, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n",
           // program to file info writing
@@ -291,9 +308,7 @@ void updateAccount(struct User u) {
         }
       }
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
-            userName, r.accountNbr, r.deposit.month, r.deposit.day,
-            r.deposit.year, r.country, r.phone, r.amount, r.accountType);
+    writeRecordToFile(tempFile, userName, r);
   }
   fclose(oldFile);
   fclose(tempFile);
@@ -518,9 +533,7 @@ void makeTransaction(struct User u) {
         }
       }
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
-            userName, r.accountNbr, r.deposit.month, r.deposit.day,
-            r.deposit.year, r.country, r.phone, r.amount, r.accountType);
+    writeRecordToFile(tempFile, userName, r);
   }
   fclose(oldFile);
   fclose(tempFile);
@@ -577,9 +590,7 @@ void removeExistingAccount (struct User u) {
       found = 1;
       continue;
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
-            userName, r.accountNbr, r.deposit.month, r.deposit.day,
-            r.deposit.year, r.country, r.phone, r.amount, r.accountType);    
+    writeRecordToFile(tempFile, userName, r);   
   }
   fclose(oldFile);
   fclose(tempFile);
@@ -675,9 +686,7 @@ if (strcmp(newOwnerName, u.name) == 0)
       r.userId = newOwnerId;
       strcpy(userName, newOwnerName);
     }
-    fprintf(tempFile, "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n", r.id, r.userId,
-            userName, r.accountNbr, r.deposit.month, r.deposit.day,
-            r.deposit.year, r.country, r.phone, r.amount, r.accountType);     
+    writeRecordToFile(tempFile, userName, r);     
   }
   fclose(oldFile);
   fclose(tempFile);

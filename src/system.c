@@ -40,7 +40,7 @@ int isValidPhone(char phone[]) {
 
     return 1;
 }
-// for all data modifications such as update info, transaction, transfer, remove
+// for all record or data writing
 void writeRecordToFile(FILE *file, const char userName[], struct Record r){
   fprintf(file,
             "%d %d %s %d %d/%d/%d %s %s %.2lf %s\n\n",
@@ -57,7 +57,7 @@ void writeRecordToFile(FILE *file, const char userName[], struct Record r){
             r.accountType);
 }
 
-// for saving data from scratch, new accounts.
+// prepares new record with current user and reuses helper to write
 void saveAccountToFile(FILE *ptr, struct User u, struct Record r) {
   r.userId = u.id;
   writeRecordToFile(ptr, u.name, r);

@@ -22,9 +22,9 @@
 
 ## Refactor
 
-- [ ] Replace `goto` in `createNewAcc`
-- [ ] Review duplicated record-writing logic
-- [ ] Review helper functions and their responsibilities
+- [x] Replace `goto` in `createNewAcc`
+- [x] Review duplicated record-writing logic
+- [x] Review helper functions and their responsibilities
 - [ ] Clean up the Makefile
 
 

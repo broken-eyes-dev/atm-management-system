@@ -112,49 +112,74 @@ cosas a mejorar:
 */
 void createNewAcc(struct User u) {
   struct Record r;  // new account creation
-  struct Record cr; // new temporary record to compare with existing accounts
+  struct Record cr; // temporary record to compare with existing accounts
   char userName[50];
+
   int lastId = -1;
-  int validType = 0;
-  int validPhone = 0;
   int accountAvailable = 0;
+  int validPhone = 0;
+  int validType = 0;
 
-  FILE *pf = fopen(RECORDS, "a+"); // opens records.txt and asks each field info that will be
-                      // saved in records.txt (allows to read and write)
+  FILE *pf = fopen(RECORDS, "a+");
 
+  if (pf == NULL) {
+    printf("Error opening records file\n");
+    exit(EXIT_FAILURE);
+  }
 
   system("clear");
   printf("\t\t\t===== New record =====\n");
 
-  printf("\nEnter today's date(mm/dd/yyyy):");
-  scanf("%d/%d/%d", &r.deposit.month, &r.deposit.day, &r.deposit.year);
+  while (!accountAvailable) {
+    printf("\nEnter today's date(mm/dd/yyyy):");
+    scanf("%d/%d/%d",
+          &r.deposit.month,
+          &r.deposit.day,
+          &r.deposit.year);
 
-while(!accountAvailable){
+    int validAccountNbr = 0;
 
-  printf("\nEnter the account number:");
-  scanf("%d", &r.accountNbr);
-  accountAvailable = 1;
+    while (!validAccountNbr) {
+      printf("\nEnter the account number:");
 
-  lastId = -1;
-  rewind(pf);
+      if (scanf("%d", &r.accountNbr) == 1) {
+        validAccountNbr = 1;
+      } else {
+        printf("Invalid account number. Please enter numbers only.\n");
 
-  while (getAccountFromFile(pf, userName, &cr)) {
-    lastId = cr.id;
+        int c;
 
-    if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
-      
-      accountAvailable = 0;
-      printf("✖ This Account already exists for this user\n\n");
-      waitForEnter();
-      break;
+        while ((c = getchar()) != '\n' && c != EOF) {
+        } // discard all useless chars until enter
+      }
+    }
+
+    accountAvailable = 1;
+
+    lastId = -1;
+    rewind(pf);
+
+    while (getAccountFromFile(pf, userName, &cr)) {
+      lastId = cr.id;
+
+      if (strcmp(userName, u.name) == 0 &&
+          cr.accountNbr == r.accountNbr) {
+        accountAvailable = 0;
+
+        printf("✖ This account already exists for this user\n\n");
+        waitForEnter();
+
+        break;
+      }
     }
   }
-  }
+
   r.id = lastId + 1;
-  // only after checking the full file it asks for info to create a new account
+
   printf("\nEnter the country:");
   scanf("%s", r.country);
-  while(!validPhone) {
+
+  while (!validPhone) {
     printf("\nEnter the phone number:");
     scanf("%s", r.phone);
 
@@ -164,28 +189,33 @@ while(!accountAvailable){
       printf("Invalid phone number. Please enter exactly 10 digits.\n");
     }
   }
+
   printf("\nEnter amount to deposit: $");
   scanf("%lf", &r.amount);
-  
-   while (!validType){
-    printf("\nChoose the type of account:\n\t-> saving\n\t-> current\n\t-> "
-         "fixed01(for 1 year)\n\t-> fixed02(for 2 years)\n\t-> fixed03(for 3 "
-         "years)\n\n\tEnter your choice:");
+
+  while (!validType) {
+    printf("\nChoose the type of account:\n");
+    printf("\t-> saving\n");
+    printf("\t-> current\n");
+    printf("\t-> fixed01(for 1 year)\n");
+    printf("\t-> fixed02(for 2 years)\n");
+    printf("\t-> fixed03(for 3 years)\n");
+
+    printf("\nEnter your choice:");
     scanf("%s", r.accountType);
 
-    if(isValidAccountType(r.accountType)) {
+    if (isValidAccountType(r.accountType)) {
       validType = 1;
     } else {
       printf("Invalid account type. Please try again.\n");
     }
-  } 
+  }
 
-  saveAccountToFile(pf, u, r); // this line orders to write info prevousily staged in r
+  saveAccountToFile(pf, u, r);
 
   fclose(pf);
-  success(u); // shows the success message and goes back to main menu or exit
+  success(u);
 }
-
 
 void updateAccount(struct User u) {
   struct Record r; // current reading account on each loop

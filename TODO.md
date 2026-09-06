@@ -4,7 +4,7 @@
 
 - [x] v1.0.0 - MVP with all required features
 - [x] v1.0.1 - Bug fixes and stability improvements
-- [ ] v1.1.0 - Refactor and code quality improvements
+- [x] v1.1.0 - Refactor and code quality improvements
 
 
 ## Fixes
@@ -25,7 +25,7 @@
 - [x] Replace `goto` in `createNewAcc`
 - [x] Review duplicated record-writing logic
 - [x] Review helper functions and their responsibilities
-- [ ] Clean up the Makefile
+- [x] Clean up the Makefile
 
 
 ## Robustness / Error handling

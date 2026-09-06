@@ -117,18 +117,23 @@ void createNewAcc(struct User u) {
   int lastId = -1;
   int validType = 0;
   int validPhone = 0;
+  int accountAvailable = 0;
 
   FILE *pf = fopen(RECORDS, "a+"); // opens records.txt and asks each field info that will be
                       // saved in records.txt (allows to read and write)
 
-noAccount:
+
   system("clear");
   printf("\t\t\t===== New record =====\n");
 
   printf("\nEnter today's date(mm/dd/yyyy):");
   scanf("%d/%d/%d", &r.deposit.month, &r.deposit.day, &r.deposit.year);
+
+while(!accountAvailable){
+
   printf("\nEnter the account number:");
   scanf("%d", &r.accountNbr);
+  accountAvailable = 1;
 
   lastId = -1;
   rewind(pf);
@@ -137,11 +142,13 @@ noAccount:
     lastId = cr.id;
 
     if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr) {
+      
+      accountAvailable = 0;
       printf("✖ This Account already exists for this user\n\n");
       waitForEnter();
-      goto noAccount; // go back to start and redo all the verification
-      // refactor goto in future version
+      break;
     }
+  }
   }
   r.id = lastId + 1;
   // only after checking the full file it asks for info to create a new account

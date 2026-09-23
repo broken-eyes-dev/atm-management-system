@@ -5,10 +5,9 @@
 - [x] v1.0.0 - MVP with all required features
 - [x] v1.0.1 - Bug fixes and stability improvements
 - [x] v1.1.0 - Refactor and code quality improvements
-- [x] v1.2.0 - Robustness / error handling
-- [ ] v1.3.0 - Security
-- [ ] v1.4.0 - System Bonus
-- [ ] v1.5.0 - UI polish
+- [x] v1.2.0 - Robustness / error handling / security
+- [ ] v1.3.0 - System Bonus
+- [ ] v1.4.0 - UI polish
 - [ ] v2.0.0 - Persistence redesign
 
 

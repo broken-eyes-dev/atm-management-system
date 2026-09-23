@@ -46,3 +46,4 @@ void transferOwner(struct User u);
 
 // helper function
 void waitForEnter(void);
+int replaceRecordsFile(void);

@@ -5,7 +5,7 @@
 - [x] v1.0.0 - MVP with all required features
 - [x] v1.0.1 - Bug fixes and stability improvements
 - [x] v1.1.0 - Refactor and code quality improvements
-- [ ] v1.2.0 - Robustness / error handling
+- [x] v1.2.0 - Robustness / error handling
 - [ ] v1.3.0 - Security
 - [ ] v1.4.0 - System Bonus
 - [ ] v1.5.0 - UI polish
@@ -35,8 +35,8 @@
 
 ## Robustness / Error handling
 
-- [ ] Check return values of `remove()` and `rename()` when replacing `records.txt`
-- [ ] Review file operation failures to avoid leaving inconsistent temporary files
+- [x] Check return values of `remove()` and `rename()` when replacing `records.txt`
+- [x] Review file operation failures to avoid leaving inconsistent temporary files
 
 ## Security
 

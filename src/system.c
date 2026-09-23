@@ -117,7 +117,13 @@ invalid:
   }
 }
 
-
+int replaceRecordsFile(void){
+  if(rename("./data/temp.txt", "./data/records.txt") != 0) {
+    perror("Error replacing records file");
+    return 0;
+  }
+  return 1;
+}
 /*
 cosas a mejorar:
 - r.id no tiene valor asignado
@@ -312,13 +318,19 @@ void updateAccount(struct User u) {
   fclose(tempFile);
 
   if (found == 0) {
-    remove("./data/temp.txt");
+    if (remove("./data/temp.txt") != 0){
+      perror("Error deleting temporary file");
+      }
+
     printf("Account not found\n");
     waitForEnter();
     return;
   }
-  remove("./data/records.txt");
-  rename("./data/temp.txt", "./data/records.txt");
+
+  if(!replaceRecordsFile()) {
+  waitForEnter();
+  return;
+  }
 
   success(u);
 }
@@ -537,7 +549,10 @@ void makeTransaction(struct User u) {
   fclose(tempFile);
 
   if (found == 0) {
-    remove("./data/temp.txt");
+    if (remove("./data/temp.txt") != 0){
+      perror("Error deleting temporary file");
+      }
+
     printf("Account not found\n");
     waitForEnter();
     return;
@@ -549,8 +564,10 @@ void makeTransaction(struct User u) {
     waitForEnter();
     return;
   }
-  remove("./data/records.txt");
-  rename("./data/temp.txt", "./data/records.txt");
+  if (!replaceRecordsFile()) {
+    waitForEnter();
+    return;
+}
 
   success(u); 
 }
@@ -594,13 +611,19 @@ void removeExistingAccount (struct User u) {
   fclose(tempFile);
 
   if (found == 0) {
-    remove("./data/temp.txt");
+    if (remove("./data/temp.txt") != 0){
+      perror("Error deleting temporary file");
+      }
+
     printf("Account not found\n");
     waitForEnter();
     return;
   }
-  remove("./data/records.txt");
-  rename("./data/temp.txt", "./data/records.txt");
+  
+  if (!replaceRecordsFile()) {
+    waitForEnter();
+    return;
+  }
 printf("\nYour account was successfully removed\n");
 
 success(u);
@@ -689,14 +712,19 @@ if (strcmp(newOwnerName, u.name) == 0)
   fclose(oldFile);
   fclose(tempFile);
 
-    if (accountFound == 0) {
-    remove("./data/temp.txt");
+  if (accountFound == 0) {
+    if (remove("./data/temp.txt") != 0){
+      perror("Error deleting temporary file");
+      }
+
     printf("Account not found\n");
     waitForEnter();
     return;
   }
-  remove("./data/records.txt");
-  rename("./data/temp.txt", "./data/records.txt");
+  if (!replaceRecordsFile()) {
+    waitForEnter();
+    return;
+  }
   printf("\nYour account was successfully transferred to %s\n", newOwnerName);
 
 success(u);

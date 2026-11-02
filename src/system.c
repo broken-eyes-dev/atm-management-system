@@ -16,7 +16,7 @@ int getAccountFromFile(FILE *ptr, char name[50],
 }
 
 int isValidAccountType(char accountType[]) {
-  if (strcmp(accountType, "saving") == 0 ||
+  if (strcmp(accountType, "savings") == 0 ||
     strcmp(accountType, "current") == 0 ||
     strcmp(accountType, "fixed01") == 0 ||
     strcmp(accountType, "fixed02") == 0 ||
@@ -124,13 +124,7 @@ int replaceRecordsFile(void){
   }
   return 1;
 }
-/*
-cosas a mejorar:
-- r.id no tiene valor asignado
-- accountType no se valida
-- phone como int es discutible
-- usa goto
-*/
+
 void createNewAcc(struct User u) {
   struct Record r;  // new account creation
   struct Record cr; // temporary record to compare with existing accounts
@@ -216,7 +210,7 @@ void createNewAcc(struct User u) {
 
   while (!validType) {
     printf("\nChoose the type of account:\n");
-    printf("\t-> saving\n");
+    printf("\t-> savings\n");
     printf("\t-> current\n");
     printf("\t-> fixed01(for 1 year)\n");
     printf("\t-> fixed02(for 2 years)\n");
@@ -381,7 +375,7 @@ while (getAccountFromFile(file, userName, &r))
        if (strcmp(r.accountType, "current") == 0) {
         printf("You will not get interests because the account is of type current\n");
        }
-       else if (strcmp(r.accountType, "saving") == 0) {
+       else if (strcmp(r.accountType, "savings") == 0) {
         interestRate = 0.07;
        }
        else if (strcmp(r.accountType, "fixed01") == 0) {
@@ -643,7 +637,7 @@ void transferOwner(struct User u) {
 
 
   printf("\nEnter the new owner's name: ");
-  scanf("%s", newOwnerName); // destinatario
+  scanf("%s", newOwnerName);
 
   // NEW OWNER'S USERNAME VALIDATION
   FILE *usersFile = fopen("./data/users.txt", "r");

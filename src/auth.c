@@ -74,16 +74,7 @@ void registerMenu(char name[50], char password[50]) {
   printf("\t\t\t===== Registration completed =====\n");
 };
 
-int checkCredentials(struct User *u)
-/*
-recieve user credentials
-open users.txt
-read each user
-compare username and password
-return 1 if credentials match
-return 0 otherwise
-*/
-{
+int checkCredentials(struct User *u) {
   FILE *fp;
   struct User userChecker;
 
